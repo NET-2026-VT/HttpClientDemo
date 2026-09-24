@@ -13,10 +13,10 @@ namespace HttpClientDemo.Client.Controllers
 
         private readonly HttpClient _httpClient;
         private readonly IHttpClientFactory _httpClientFactory;
-        private readonly StudentClient _studenClient; 
+        private readonly IStudentClient _studenClient; 
         private const string json = "application/json"; 
 
-        public HomeController(HttpClient httpClient, IHttpClientFactory httpClientFactory, StudentClient studentClient)
+        public HomeController(HttpClient httpClient, IHttpClientFactory httpClientFactory, IStudentClient studentClient)
         {
             _httpClient = httpClientFactory.CreateClient();
             _httpClient.BaseAddress = new Uri("https://localhost:7045/");
@@ -31,9 +31,12 @@ namespace HttpClientDemo.Client.Controllers
         public async Task<IActionResult> Index()
         {
             //var res = await SimpleGet();
-            var res = await GetWithRequestMessage(); 
-            //var res = await CreateStudent();
-            var res2 = await _studenClient.GetWithRequestMessage(); 
+            //var res = await GetWithRequestMessage(); 
+            ////var res = await CreateStudent();
+            //var res2 = await _studenClient.GetWithRequestMessage(); 
+
+            var res = await _studenClient.GetAsync<IEnumerable<StudentDto>>("api/students");
+            var res2 = await _studenClient.GetAsync<StudentDto>("api/students/2");
             return View();
         }
 

@@ -28,7 +28,7 @@ namespace HttpClientDemo.Client
             });
 
             //3. Skapa en egen client där man sätter alla värden direkt i klassen
-            builder.Services.AddHttpClient<StudentClient>(); 
+            builder.Services.AddHttpClient<IStudentClient, StudentClient>(); 
 
 
             var app = builder.Build();
