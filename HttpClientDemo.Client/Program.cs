@@ -1,3 +1,4 @@
+using HttpClientDemo.Client.Clients;
 using System.Net.Http.Headers;
 
 namespace HttpClientDemo.Client
@@ -25,6 +26,9 @@ namespace HttpClientDemo.Client
                 client.BaseAddress = new Uri("");
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));               
             });
+
+            //3. Skapa en egen client där man sätter alla värden direkt i klassen
+            builder.Services.AddHttpClient<StudentClient>(); 
 
 
             var app = builder.Build();

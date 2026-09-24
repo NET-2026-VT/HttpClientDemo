@@ -1,3 +1,4 @@
+using HttpClientDemo.Client.Clients;
 using HttpClientDemo.Client.Models;
 using HttpClientDemo.Models.Dtos;
 using Microsoft.AspNetCore.Mvc;
@@ -12,13 +13,15 @@ namespace HttpClientDemo.Client.Controllers
 
         private readonly HttpClient _httpClient;
         private readonly IHttpClientFactory _httpClientFactory;
+        private readonly StudentClient _studenClient; 
         private const string json = "application/json"; 
 
-        public HomeController(HttpClient httpClient, IHttpClientFactory httpClientFactory)
+        public HomeController(HttpClient httpClient, IHttpClientFactory httpClientFactory, StudentClient studentClient)
         {
             _httpClient = httpClientFactory.CreateClient();
             _httpClient.BaseAddress = new Uri("https://localhost:7045/");
-            _httpClientFactory = httpClientFactory; 
+            _httpClientFactory = httpClientFactory;
+            _studenClient = studentClient; 
 
 
             //Kan rent praktiskt sätta den här om man vill att den ska sättas på alla requests.
@@ -28,8 +31,9 @@ namespace HttpClientDemo.Client.Controllers
         public async Task<IActionResult> Index()
         {
             //var res = await SimpleGet();
-            //var res2 = await GetWithRequestMessage(); 
-            var res = await CreateStudent(); 
+            var res = await GetWithRequestMessage(); 
+            //var res = await CreateStudent();
+            var res2 = await _studenClient.GetWithRequestMessage(); 
             return View();
         }
 
