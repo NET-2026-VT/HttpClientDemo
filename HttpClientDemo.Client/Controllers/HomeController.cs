@@ -11,12 +11,15 @@ namespace HttpClientDemo.Client.Controllers
     {
 
         private readonly HttpClient _httpClient;
+        private readonly IHttpClientFactory _httpClientFactory;
         private const string json = "application/json"; 
 
-        public HomeController(HttpClient httpClient)
+        public HomeController(HttpClient httpClient, IHttpClientFactory httpClientFactory)
         {
-            _httpClient = httpClient;
+            _httpClient = httpClientFactory.CreateClient();
             _httpClient.BaseAddress = new Uri("https://localhost:7045/");
+            _httpClientFactory = httpClientFactory; 
+
 
             //Kan rent praktiskt sätta den här om man vill att den ska sättas på alla requests.
             //_httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue(json)); 
@@ -32,6 +35,9 @@ namespace HttpClientDemo.Client.Controllers
 
         private async Task<StudentDto> CreateStudent()
         {
+            //Ändrar så att den använder vår factory med name
+            var httpClient = _httpClientFactory.CreateClient("StudentsClient"); 
+
             var request = new HttpRequestMessage(HttpMethod.Post, "api/students");
             request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue(json));
 
@@ -42,7 +48,7 @@ namespace HttpClientDemo.Client.Controllers
             request.Content = new StringContent(serializedStudent);
             request.Content.Headers.ContentType = new MediaTypeHeaderValue(json);
 
-            var response = await _httpClient.SendAsync(request);
+            var response = await httpClient.SendAsync(request);
             response.EnsureSuccessStatusCode();
 
             var result = await response.Content.ReadAsStringAsync();
