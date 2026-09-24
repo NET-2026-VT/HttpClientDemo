@@ -24,9 +24,32 @@ namespace HttpClientDemo.Client.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var res = await SimpleGet();
-            var res2 = await GetWithRequestMessage(); 
+            //var res = await SimpleGet();
+            //var res2 = await GetWithRequestMessage(); 
+            var res = await CreateStudent(); 
             return View();
+        }
+
+        private async Task<StudentDto> CreateStudent()
+        {
+            var request = new HttpRequestMessage(HttpMethod.Post, "api/students");
+            request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue(json));
+
+            var student = new CreateStudentDto("Kalle", "Anka", "N/A", "Gatan", "12345", "Staden");
+
+            var serializedStudent = JsonSerializer.Serialize(student);
+
+            request.Content = new StringContent(serializedStudent);
+            request.Content.Headers.ContentType = new MediaTypeHeaderValue(json);
+
+            var response = await _httpClient.SendAsync(request);
+            response.EnsureSuccessStatusCode();
+
+            var result = await response.Content.ReadAsStringAsync();
+
+            var studentDto = JsonSerializer.Deserialize<StudentDto>(result, new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase });
+
+            return studentDto; 
         }
 
         private async Task<IEnumerable<StudentDto>> GetWithRequestMessage()

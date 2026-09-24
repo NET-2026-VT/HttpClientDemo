@@ -23,5 +23,5 @@ public class StudentDetailsDto
 }
 
   
-public record CreateStudentDto(string FirstName,[NotSameName] string LastName, string Avatar,[MaxNumber(10)] string AddressStreet, string AddressZipCode, string AddressCity);
+public record CreateStudentDto(string FirstName,[NotSameName] string LastName, string Avatar,/*[MaxNumber(10)]*/ string AddressStreet, string AddressZipCode, string AddressCity);
 public record UpdateStudentDto(string FirstName, string LastName, string Avatar, string AddressStreet, string AddressZipCode, string AddressCity);
